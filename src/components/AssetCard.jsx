@@ -8,6 +8,7 @@ function AssetCard({
   onEdit,
   valor,
   percentual,
+  precoAtual,
 }) {
   return (
     <motion.div
@@ -41,6 +42,15 @@ function AssetCard({
               Participação: {percentual}%
             </p>
           </p>
+
+          <p className="text-yellow-400 mt-1">
+            Preço atual:
+            {
+              precoAtual
+                ? ` $${precoAtual}`
+                : ' Carregando...'
+            }
+          </p>    
 
         </div>
 

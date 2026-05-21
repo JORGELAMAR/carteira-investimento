@@ -50,6 +50,35 @@ function App() {
 
   }, [])
 
+  useEffect(() => {
+
+    async function buscarPrecos() {
+
+      const simbolos = ativos
+        .map((ativo) => ativo.nome)
+        .join(',')
+
+      const resposta = await fetch(
+        `https://financialmodelingprep.com/api/v3/quote/${simbolos}?apikey=xvqphT66pgpGgl5YfoQWkd7pNBUmBlzy`
+      )
+
+      const dados = await resposta.json()
+
+      const mapaPrecos = {}
+
+      dados.forEach((ativo) => {
+        mapaPrecos[ativo.symbol] = ativo.price
+      })
+
+      setPrecos(mapaPrecos)
+    }
+
+    if (ativos.length > 0) {
+      buscarPrecos()
+    }
+
+  }, [ativos])  
+
   const [editando, setEditando] = useState(false)
   const [ativoOriginal, setAtivoOriginal] = useState(null)
   const [nome, setNome] = useState('')
@@ -59,6 +88,7 @@ function App() {
   const [ordenacao, setOrdenacao] = useState('valor')
   const [darkMode, setDarkMode] = useState(true)
   const [bitcoin, setBitcoin] = useState(null)
+  const [precos, setPrecos] = useState({})
 
   function adicionarAtivo() {
     if (!nome || !rentabilidade) return
@@ -259,6 +289,7 @@ function App() {
             onDelete={() => excluirAtivo(ativo.nome)}
             onEdit={() => editarAtivo(ativo)}
             valor={ativo.valor}
+            precoAtual={precos[ativo.nome]}
             percentual={
               ((ativo.valor / patrimonioTotal) * 100).toFixed(1)
             }
