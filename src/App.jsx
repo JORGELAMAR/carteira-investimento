@@ -89,6 +89,8 @@ function App() {
   const [darkMode, setDarkMode] = useState(true)
   const [bitcoin, setBitcoin] = useState(null)
   const [precos, setPrecos] = useState({})
+  const [quantidade, setQuantidade] = useState('')
+  const [precoAtual, setPrecoAtual] = useState('')
 
   function adicionarAtivo() {
     if (!nome || !rentabilidade) return
@@ -96,6 +98,7 @@ function App() {
     const novoAtivo = {
       nome,
       rentabilidade,
+      quantidade: Number(quantidade),
       valor: Number(valor),
       positiva: !rentabilidade.includes('-'),
     }
@@ -119,6 +122,7 @@ function App() {
     setNome('')
     setRentabilidade('')
     setValor('')
+    setQuantidade('')
   }
 
   function excluirAtivo(nomeAtivo) {
@@ -241,6 +245,16 @@ function App() {
             onChange={(e) => setValor(e.target.value)}
             className="bg-gray-700 p-2 rounded-lg w-full"
           /> 
+
+          <input
+            type="number"
+            placeholder="Quantidade de cotas"
+            value={quantidade}
+            onChange={(e) =>
+              setQuantidade(e.target.value)
+            }
+            className="bg-gray-700 p-2 rounded-lg w-full"
+          />    
 
           <button
             onClick={adicionarAtivo}

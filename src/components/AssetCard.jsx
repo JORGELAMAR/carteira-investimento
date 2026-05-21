@@ -8,8 +8,17 @@ function AssetCard({
   onEdit,
   valor,
   percentual,
+  quantidade,
   precoAtual,
 }) {
+
+  const valorAtual =
+    precoAtual && quantidade
+      ? precoAtual * quantidade
+      : 0
+
+  const lucro = valorAtual - valor
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -35,6 +44,24 @@ function AssetCard({
           >
             {rentabilidade}  
           </p>
+
+          <p className="text-gray-400 mt-2">
+            Valor investido: R$ {valor}
+          </p>
+
+          <p className="text-gray-400">
+            Valor atual: R$ {valorAtual.toFixed(2)}
+          </p>
+
+          <p
+            className={
+              lucro >= 0
+                ? 'text-green-400 font-bold'
+                : 'text-red-400 font-bold'
+            }
+          >
+            Resultado: R$ {lucro.toFixed(2)}
+          </p>
           
           <p className="text-gray-400 mt-1">
             R$ {valor}
@@ -52,8 +79,23 @@ function AssetCard({
             }
           </p>    
 
-        </div>
+          <p
+            className={`mt-1 ${
+            lucro >= 0
+              ? 'text-green-400'
+              : 'text-red-400'
+            }`}
+          >
+            Resultado:
+            {
+              lucro >= 0
+              ? ` +R$ ${lucro.toFixed(2)}`
+              : ` -R$ ${Math.abs(lucro).toFixed(2)}`
+            }
+          </p>
 
+        </div>
+      
         <div className="flex gap-2">
 
           <button
