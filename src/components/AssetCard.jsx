@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 
 function AssetCard({
   nome,
@@ -9,8 +10,36 @@ function AssetCard({
   valor,
   percentual,
   quantidade,
-  precoAtual,
 }) {
+
+  const [precoAtual, setPrecoAtual] = useState(null)
+
+  async function buscarPrecoAtivo() {
+
+    try {
+
+      console.log(nome)
+
+      const resposta = await fetch(
+        `http://localhost:3001/ativo/${nome}`
+      )
+
+      const dados = await resposta.json()
+
+      console.log(dados)
+
+      setPrecoAtual(dados.preco)
+
+    } catch (erro) {
+
+      console.log('Erro ao buscar preço')
+
+    }
+  }   
+
+  useEffect(() => {
+    buscarPrecoAtivo()
+  }, [])    
 
   const valorAtual =
     precoAtual && quantidade
@@ -74,7 +103,7 @@ function AssetCard({
             Preço atual:
             {
               precoAtual
-                ? ` $${precoAtual}`
+                ? ` R$ ${precoAtual.toFixed(2)}`
                 : ' Carregando...'
             }
           </p>    
