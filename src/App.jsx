@@ -6,6 +6,22 @@ import PatrimonyChart from './components/PatrimonyChart'
 function App() {
   const [ativos, setAtivos] = useState(() => {
   const ativosSalvos = localStorage.getItem('ativos')
+  
+  async function buscarPrecoAtivo(ticker) {
+    try {
+      const resposta = await fetch(
+        `https://brapi.dev/api/quote/${ticker}`
+      )
+
+      const dados = await resposta.json()
+
+      return dados.results[0].regularMarketPrice
+
+    } catch (erro) {
+      console.log('Erro ao buscar ativo', erro)
+      return null
+    }
+  }
 
   return ativosSalvos
     ? JSON.parse(ativosSalvos)
@@ -92,14 +108,17 @@ function App() {
   const [quantidade, setQuantidade] = useState('')
   const [precoAtual, setPrecoAtual] = useState('')
 
-  function adicionarAtivo() {
+  async function adicionarAtivo() {
     if (!nome || !rentabilidade) return
+
+    const precoAtual = await buscarPrecoAtivo(nome)
 
     const novoAtivo = {
       nome,
       rentabilidade,
       quantidade: Number(quantidade),
       valor: Number(valor),
+      precoAtual,
       positiva: !rentabilidade.includes('-'),
     }
 
